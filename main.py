@@ -1,3 +1,4 @@
+
 class BooksCollector:
 
     def __init__(self):
@@ -55,3 +56,4 @@ class BooksCollector:
     # получаем список Избранных книг
     def get_list_of_favorites_books(self):
         return self.favorites
+
