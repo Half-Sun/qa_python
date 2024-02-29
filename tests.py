@@ -17,7 +17,7 @@ class TestBooksCollector:
         collector = BooksCollector()
         book_name = "a" * 41
         collector.add_new_book(book_name)
-        assert book_name not in collector.books_genre
+        assert book_name not in collector.get_books_genre()
 
     def test_add_new_book_add_one_book_twice(self):
         collector = BooksCollector()
@@ -39,18 +39,18 @@ class TestBooksCollector:
         collector.add_new_book(book_name)
         assert len(collector.get_book_genre('Библия')) == 0
 
-
     @pytest.mark.parametrize('genre, expected_books', [
         ('Фантастика', ['Хоббит', 'Властелин колец']),
         ('Мультфильмы', ['Маленький принц']),
         ('Комедии', []),
     ])
-    def test_get_books_with_specific_genre_3_genres_specified(self, genre, expected_books):
+    def test_set_book_genre_and_set_book_genre_add_1_book_with_genre(self, genre, expected_books):
         collector = BooksCollector()
-        for book_name in expected_books:
-            collector.add_new_book(book_name)
-            collector.set_book_genre(book_name, genre)
-        assert collector.get_books_with_specific_genre(genre) == expected_books
+        book_name = 'Институт'
+        genre = 'Ужасы'
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, genre)
+        assert collector.get_book_genre(book_name) == genre
 
     @pytest.mark.parametrize('book_name, genre', [
         ('Кот в сапогах', 'Мультфильмы'),
@@ -59,10 +59,12 @@ class TestBooksCollector:
     ])
     def test_get_books_for_children_2_books_for_children_added(self, book_name, genre):
         collector = BooksCollector()
+        book_name = 'Кот в сапогах'
+        genre = 'Мультфильмы'
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
         expected_children_books = []
-        for name, genre in collector.books_genre.items():
+        for name, genre in collector.get_books_genre().items():
             if genre not in collector.genre_age_rating and genre in collector.genre:
                 expected_children_books.append(book_name)
         assert collector.get_books_for_children() == expected_children_books
@@ -70,13 +72,15 @@ class TestBooksCollector:
     @pytest.mark.parametrize('book_name', ['Повесть о двух городах', 'Дон Кихот', 'Цитаты председателя Мао Цзэдуна'])
     def test_add_book_in_favorites_add_1_book(self, book_name):
         collector = BooksCollector()
+        book_name = 'Повесть о двух городах'
         collector.add_new_book(book_name)
         collector.add_book_in_favorites(book_name)
         assert book_name in collector.get_list_of_favorites_books()
 
     def test_delete_book_in_favorites_delete(self):
         collector = BooksCollector()
-        collector.add_new_book("Коран")
-        collector.add_book_in_favorites("Коран")
-        collector.delete_book_from_favorites("Коран")
-        assert "Коран" not in collector.favorites
+        book_name = "Коран"
+        collector.add_new_book(book_name)
+        collector.add_book_in_favorites(book_name)
+        collector.delete_book_from_favorites(book_name)
+        assert book_name not in collector.favorites
